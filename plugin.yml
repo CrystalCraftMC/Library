@@ -1,0 +1,24 @@
+name: Library
+main: com.crystalcraftmc.library.main.Library
+version: 0.1
+commands:
+   createLibrary:
+      description:
+         Specify 2 corners in which to place your library
+      usage:
+         /<command> <x1> <y1> <z1> <x2> <y2> <z2>
+   deleteLibrary:
+      description:
+         Remove the current library if any
+      usage:
+         /<command>
+   showLibrary:
+      description:
+         Show the 2 corner coordinates of the current library
+      usage:
+         /<command>
+   libraryPerms:
+      description:
+         No-args shows list of ppl with perms; you can also add/remove people from list
+      usage:
+         /<command> <add_remove> <player name>
