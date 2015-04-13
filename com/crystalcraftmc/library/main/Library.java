@@ -270,6 +270,7 @@ public class Library extends JavaPlugin implements Listener {
 				"(" + ChatColor.GOLD + String.valueOf(libraryArea[3]) +
 					", " + String.valueOf(libraryArea[4]) + ", " + String.valueOf(libraryArea[5]) +
 					ChatColor.DARK_PURPLE + ")");
+		p.sendMessage(ChatColor.GOLD + "Remember, the library has to be in the overworld.");
 	}
 	
 	@EventHandler
@@ -281,11 +282,6 @@ public class Library extends JavaPlugin implements Listener {
 		if(isInsideLibrary(e.getPlayer().getLocation()) && 
 				e.getPlayer().getWorld().getEnvironment() == Environment.NORMAL) {
 			e.getPlayer().getInventory().clear();
-			for(ItemStack clear : noPT) {
-				e.getPlayer().setItemInHand(clear);
-				e.getPlayer().performCommand("pt");
-				e.getPlayer().getInventory().clear();
-			}
 		}
 		else if(isInsideLibrary(e.getTo())) {
 			Player p = e.getPlayer();
@@ -299,6 +295,13 @@ public class Library extends JavaPlugin implements Listener {
 				p.sendMessage(ChatColor.GOLD + "Error; you need a clear inventory " +
 						"to enter the library.");
 				e.setCancelled(true);
+			}
+			else if(ir == InventoryResult.CLEAR) {
+				for(ItemStack clear : noPT) {
+					e.getPlayer().setItemInHand(clear);
+					e.getPlayer().performCommand("pt");
+					e.getPlayer().getInventory().clear();
+				}	
 			}
 		}
 	}
