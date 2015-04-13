@@ -485,4 +485,13 @@ public class Library extends JavaPlugin implements Listener {
 					"/warp while in the library.");
 		}
 	}
+	
+	@EventHandler
+	public void blastProt(EntityExplodeEvent e) {
+		if(e.getLocation().getWorld().getEnvironment() == Environment.NORMAL){
+			if(this.isInsideSnowball(e.getLocation()))
+				e.setCancelled(true); 		//impenetrable against tnt cannons
+		}
+	}
+	
 }
