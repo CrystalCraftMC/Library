@@ -23,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -193,68 +194,94 @@ public class Library extends JavaPlugin implements Listener {
 		if(!new File("LibraryFiles").exists())
 			new File("LibraryFiles").mkdir();
 		File file = new File("LibraryFiles\\Library.txt");
+		Scanner in = null;
+		PrintWriter pw = null;
 		try{
 			if(!file.exists()) {
-				PrintWriter pw = new PrintWriter("LibraryFiles\\Library.txt");
+				pw = new PrintWriter("LibraryFiles\\Library.txt");
 				for(int i = 0; i < 6; i++) {
 					pw.println("1234567899");
 					libraryArea[i] = 1234567899;
 				}
-				pw.close();
 			}
 			else {
-				Scanner in = new Scanner(file);
+				in = new Scanner(file);
 				for(int i = 0; i < 6; i++) {
 					libraryArea[i] = Integer.parseInt(in.nextLine());
 				}
-				in.close();
 			}
-		}catch(IOException e) { e.printStackTrace(); }
+		}catch(IOException e) { e.printStackTrace();
+		}finally {
+			if(in != null)
+				in.close();
+			if(pw != null)
+				pw.close();
+		}
 	}
 	
 	/**Updates the library area file*/
 	public void updateLibraryArea() {
+		PrintWriter pw = null;
 		try{
 			if(!new File("LibraryFiles").exists())
 				new File("LibraryFiles").mkdir();
-			PrintWriter pw = new PrintWriter("LibraryFiles\\Library.txt");
+			pw = new PrintWriter("LibraryFiles\\Library.txt");
 			for(int i = 0; i < 6; i++)
 				pw.println(String.valueOf(libraryArea[i]));
-			pw.close();
-		}catch(IOException e) { e.printStackTrace(); }
+		}catch(IOException e) { e.printStackTrace();
+		}finally {
+			if(pw != null)
+				pw.close();
+		}
 	}
 	
 	/**This initializes the library permissions file*/
 	public void initializeLibraryPerms() {
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
 		try{
 			if(!new File("LibraryFiles").exists())
 				new File("LibraryFiles").mkdir();
 			File file = new File("LibraryFiles\\LibraryPerms.ser");
 			if(file.exists()) {
-				FileInputStream fis = new FileInputStream(file);
-				ObjectInputStream ois = new ObjectInputStream(fis);
+				fis = new FileInputStream(file);
+				ois = new ObjectInputStream(fis);
 				libraryPerms = (ArrayList<String>)ois.readObject();
-				ois.close();
-				fis.close();
 			}
 		}catch(IOException e) { e.printStackTrace(); 
-		}catch(ClassNotFoundException e) { e.printStackTrace(); }
+		}catch(ClassNotFoundException e) { e.printStackTrace();
+		}finally {
+			try{
+				if(ois != null)
+					ois.close();
+				if(fis != null)
+					fis.close();
+			}catch(IOException e) { e.printStackTrace(); }
+		}
 	}
 	
 	/**This updates the library permissions file*/
 	public void updatePerms() {
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
 		try{
 			if(!new File("LibraryFiles").exists())
 				new File("LibraryFiles").mkdir();
 			File file = new File("LibraryFiles\\LibraryPerms.ser");
 			if(file.exists())
 				file.delete();
-			FileOutputStream fos = new FileOutputStream(file);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			fos = new FileOutputStream(file);
+			oos = new ObjectOutputStream(fos);
 			oos.writeObject(libraryPerms);
-			oos.close();
-			fos.close();
-		}catch(IOException e) { e.printStackTrace(); }
+		}catch(IOException e) { e.printStackTrace();
+		}finally {
+			try{
+				if(oos != null)
+					oos.close();
+				if(fos != null)
+					fos.close();
+			}catch(IOException e) { e.printStackTrace(); }
+		}
 	}
 	
 	/**Displays the current library area
@@ -489,7 +516,7 @@ public class Library extends JavaPlugin implements Listener {
 	@EventHandler
 	public void blastProt(EntityExplodeEvent e) {
 		if(e.getLocation().getWorld().getEnvironment() == Environment.NORMAL){
-			if(this.isInsideSnowball(e.getLocation()))
+			if(this.isInsideLibrary(e.getLocation()))
 				e.setCancelled(true); 		//impenetrable against tnt cannons
 		}
 	}
