@@ -1,18 +1,9 @@
 package com.crystalcraftmc.library.main;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Scanner;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
@@ -31,7 +22,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.World.Environment;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Library extends JavaPlugin implements Listener {
 	
@@ -179,7 +173,7 @@ public class Library extends JavaPlugin implements Listener {
 	}
 	
 	/**Tests that a String is a valid int value
-	 * @param String the string we're testing
+	 * @param str the string we're testing
 	 * @return boolean; true if the string is an int
 	 */
 	public boolean isInt(String str) {
@@ -285,7 +279,7 @@ public class Library extends JavaPlugin implements Listener {
 	}
 	
 	/**Displays the current library area
-	 * @param player, the player we're showing the library area to
+	 * @param p the player we're showing the library area to
 	 */
 	public void showLibrary(Player p) {
 		p.sendMessage(ChatColor.BLUE + "Coordinates are formatted as (x, y, z)");
@@ -402,8 +396,8 @@ public class Library extends JavaPlugin implements Listener {
 	}
 	
 	/**Checks whether a given coordinate is inside of the libraryarea
-	 * @param Location, the location we're teleporting to
-	 * @return boolean, true if the coordinates are inside the area
+	 * @param loc the location we're teleporting to
+	 * @return boolean true if the coordinates are inside the area
 	 */
 	public boolean isInsideLibrary(Location loc) {
 		if(loc.getWorld().getEnvironment() != Environment.NORMAL)
@@ -438,13 +432,10 @@ public class Library extends JavaPlugin implements Listener {
 			lowZ = libraryArea[5];
 			highZ = libraryArea[2];
 		}
-		
-		if(x >= lowX && x <= highX &&
+
+		return x >= lowX && x <= highX &&
 				y >= lowY && y <= highY &&
-				z >= lowZ && z <= highZ) {
-			return true;
-		}
-		return false;
+				z >= lowZ && z <= highZ;
 	}
 	
 	
